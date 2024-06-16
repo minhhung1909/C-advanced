@@ -1,0 +1,427 @@
+# C-C-Advanced-Study
+
+<<<<<<< HEAD
+COMPILER
+Compiler là gì?
+- Là phần mềm để dịch ngôn ngữ bậc cao về ngôn ngữ máy.
+ví dụ: gcc, g++
+=======
+- [1a. COMPILER](#1a-COMPILER)
+- [1b. MACRO](#1b-MACRO)
+- [2a. STDARG](#2a-STDARG)
+- [2b. ASSERT](#2b-ASSERT)
+- [3. POINTER](#3-POINTER)
+- [5a. GOTO](#5a-GOTO)
+- [5b. SETJMP](#5b-SETJMP)
+
+
+# 1a. COMPILER
+
+Compiler Là phần mềm để dịch ngôn ngữ bậc cao về ngôn ngữ máy.
+
+Các Compiler: gcc, g++. Clang, GNU ...
+>>>>>>> 520f7b0f7249589dcc9227be66bf015dcc7bcd88
+
+Các bước Compiler thực hiện: Preprocessor, Compilation, Assembler, Linker
+
+## 1. Preprocessor (Tiền xử lý)
+
+Từ những file .c, .h, .cpp, .hpp chuyển sang file .i
+Lệnh tiền xử lý từ gcc: gcc -E <NameFile>.c -o <NameFile>.i
+
+Preprocessor: Là thực hiện việc gộp vào cùng một file đối với là lệnh include, còn nếu là Macro thì sẽ thay thế đoạn định nghĩa sau đó và sẽ xoá hết tất cả comment.
+
+## 2. Compilation
+
+Tạo file Assembly code ( .s)từ file .i
+Lệnh tạo ra Assembly từ gcc: gcc -S <NameFile>.i -o <NameFile>.s
+
+Compilation: tạo ra file Assembly
+
+## 3. Assembler
+
+Tạo object file .o từ file .s
+Lệnh tạo ra Object file từ gcc: gcc -C <NameFile>.s -o <NameFile>.o
+
+## 4. Linker
+
+Liên kết các Object file lại với nhau.
+tạo ra được file .exe
+Lệnh liên kết các file từ gcc: gcc <NameFile>.o <NameFile>.o -o <NameFileLinker>
+
+# 1b. MACRO
+
+<<<<<<< HEAD
+MACRO
+=======
+>>>>>>> 520f7b0f7249589dcc9227be66bf015dcc7bcd88
+Macro là nhóm lệnh dùng để thay thế định nghĩa những đoạn lệnh sau đó
+Macro gồm những nhóm lệnh sau: 
+- #include (include thư viện hoặc các file khác)
+- #define, #undef (định nghĩa/gỡ định nghĩa những giá trị sau đó)
+- #if, #elif, #else, #ifdef, #ifndef
+
+<<<<<<< HEAD
+- Sự khác nhau giửa Macro và Function
+    + Macro: Thay thế đoạn định nghĩa vào chương trình nếu gọi nhiều lần thì thay thế nhiều lần => Kích thước lớn hơn; Bù lại tốc độ xử lý nhanh hơn.
+    + Function: Viết chương trình 1 lần sau này chỉ cần gọi lại => Kích thước chương trình lớn hơn; Tốc độ xử lý chậm hơn vì phải qua những cơ chế như: lưu vào main Stack poiter hay đếm (Program counter)  
+
+STDARG-ASERT
+=======
+## Sự khác nhau giửa Macro và Function
++ Macro: Thay thế đoạn định nghĩa vào chương trình nếu gọi nhiều lần thì thay thế nhiều lần => Kích thước lớn hơn; Bù lại tốc độ xử lý nhanh hơn.
++ Function: Viết chương trình 1 lần sau này chỉ cần gọi lại => Kích thước chương trình bé hơn __Nhưng__ Tốc độ xử lý chậm hơn vì phải qua những cơ chế lưu vào main Stack poiter hay đếm (Program counter).
+## Macro Funcion 
+*Demo 1*
+
+<details><summary> *Demo 1* </summary>
+<p>
+
+```C
+#include"stdio.h"
+#define CREATE_FNC(name, cmd)       \
+void name(){                        \
+    printf(#cmd);                   \
+}
+
+#define CREATE_VAR(name)            \
+    int int_##name;                 \
+    float float_##name;             \
+    char char_##name;               \
+
+CREATE_FNC(fnc1, hello FNC 1 \n);
+CREATE_FNC(fnc2, hello FNC 2 \n);
+
+int main(int argc, char const *argv[]){
+    fnc1();
+    CREATE_VAR(temp)
+    fnc2();
+    return 0;
+}
+```
+
+</p>
+</details>
+
+*Lưu ý: Viết Macro Fuction phải có dấu \ ở cuối dòng và dòng dòng cuối cùng thì không cần __chỉ viết tới dòng kế cuối__*
+
+## Operator
+
+__#__: thay thế cho 1 chuỗi truyền vào và không cần nháy kép (*Demo 1*).
+
+__##__: Nối chuỗi lại với nhau (*Demo 1*).
+
+__VA_ARGS__: Cho phép truyền các đối số vào mà không biết trước số lượng cần truyền (*Demo 2 phía dưới*).
+
+
+
+<details><summary> Demo 2 </summary>
+<p>
+
+```C
+#include <stdio.h>
+
+#define PRINT_MENU(...)                             \
+    do {                                            \
+        const char* items[] = {__VA_ARGS__};        \
+        int n = sizeof(items) / sizeof(items[0]);   \
+        for (int i = 0; i < n; i++) {               \
+            printf("%d. %s\n", i + 1, items[i]);    \
+        }                                           \
+    } while (0)
+
+#define CASE_OPTION(number, function)   \
+case number:                            \
+    function();                         \
+    break;
+
+#define HANDLE_OPTION(option, ...)                  \
+    switch (option) {                               \
+        __VA_ARGS__                                 \
+        default: printf("Invalid option!\n");       \
+    }
+
+#define display(...)                                                    \
+    do{                                                                 \
+        const char *items[] = {__VA_ARGS__};                            \
+        int size = sizeof(items) / sizeof(items[0]);                    \
+        for(int i = 0; i < size; i++){                                  \
+            printf("Char times %d have char is: %s \n", i, items[i]);   \
+        }                                                               \
+    } while(0)                                       
+
+void feature1() { printf("Feature 1 selected ... Do something \n"); }
+void feature2() { printf("Feature 2 selected ... Do something \n"); }
+void feature3() { printf("Feature 3 selected ... Do something \n"); }
+void feature4() { printf("Feature 4 selected ... Do something \n"); }
+
+int main(int argc, char const *argv[])
+{
+
+    display("one", "two", "three", "dog", "cat");
+
+    PRINT_MENU("Option 1", "Option 2", "Option 3","Option4", "Exit");
+
+    // Giả sử option được nhập từ người dùng
+    int option ;
+    scanf("%d", &option);
+
+    HANDLE_OPTION(option,
+        CASE_OPTION(1, feature1)
+        CASE_OPTION(2, feature2)
+        CASE_OPTION(3, feature3)
+        CASE_OPTION(4, feature4))
+    return 0;
+}
+```
+
+</p>
+</details>
+
+# 2a. STDARG
+
+- Thư viện STDARG giúp viết những chương trình không biết trước tham số đầu vào.
+
+*Khai báo hàm phải có khai báo biến đầu tiên là Label định nghĩa số Input cho Function*
+
+## Cần khai báo 4 hàm khi dùng Lib này:
+
+- *va_list:* Đây là kiểu dữ liệu của thư viện stdarg khai báo giá trị để lưu mảng các giá trị.
+    
+- *va_start:* Hàm này truyền 2 đối số. có chức năng Stat chương trình
+    
+    + Đối số 1: Truyền vào biến của chứa kiểu dữ liệu __va_list__ 
+        
+    + Đối số 2: truyền vào label của số input
+        
+- *va_arg:* Hàm này có 2 đối số. Có chức năng ép kiểu dữ liệu cho các giá trị tiếp theo trong mảng giá trị
+    
+- *va_end:* Hàm này có chức năng thu hồi biến của kiểu dữ liệu __va_list__ 
+
+# 2b. ASSERT
+
+Libary này cung cấp khả năng Debug. Libary này cho phép kiểm tra nếu điều kiện thêm vào đúng thì chương trình chạy như bình thường. 
+Nếu điều kiện của chương trình sai thì chương trình sẽ dừng lại và đưa lên message lỗi.
+Dùng lệnh #define NDEBUG để tắt Debug này.
+
+# 3. POINTER
+
+- Pointer là một biến mà giá trị của nó là địa chỉ của một biến mà nó trỏ đến. Qua đó có thể thao tác trên bộ nhớ một cách đơn giản hơn. 
+
+<details><summary> Demo </summary>
+<p>
+    
+```C
+int x = 10;         // Khai báo biến
+int *ptr = &x;      // Khai báo pointer trỏ vào biến x
+// Lúc này Pointer sẽ có giá trị là địa chỉ của biến x 
+int y = *ptr_x;     // Gán giá trị của Pointer cho biến y tức là gán giá trị địa chỉ của biến x cho biến y
+```
+
+</p>
+</details>
+
+## Kiến trúc của Pointer 
+- Phụ thuộc vào kiến trúc của máy tính: 32 bit => 4 byte; 64 bit => 8 byte
+
+## Ứng dụng Pointer
+
+Bình thường khi ta truyền vào hàm một Tham Trị (Giá trị biến) khi bắt đầu thực hiện hàm lúc này biến trong function sẽ được cung cấp cho 1 địa chỉ mới và sau khi hàm kết thúc thì địa chỉ này cũng được trả lại và 2 biến đó không thay đổi giá trị.
+Nhưng khi ta truyền vào trong đó một Tham Chiếu (Địa chỉ biến) thì vẫn thực hiện trên địa chỉ đó và trả về là giá trị được hoán đổi. Demo ở đoạn code sau.
+
+<details><summary>Demo</summary>
+<p>
+    
+```C
+#include <stdio.h>
+void swap(int *a, int *b){
+    int tmp;
+    tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+int main(int argc, const char *argv[]){
+    int x = 1;
+    int y = 2;
+    printf("x after is %d, y is after %d \n", x, y);
+    swap(&x,&y);
+    printf("x before is %d, y is before %d \n", x, y);
+}
+```
+
+</p>
+</details>
+
+## Void Pointer
+
+Void pointer được sử dụng để trỏ vào biến mà không biết trước kiểu dữ liệu.
+
+*Lưu ý khi dùng void pointer phải ép kiểu khi muốn in giá trị.*
+
+
+<details><summary> Xem Code Demo </summary>
+<p>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {   
+    int value = 5;
+    double test = 15.7;
+    char letter = 'A';
+    
+    void *ptr = &value;
+    printf("value is: %d\n", *(int*)(ptr));
+
+    ptr = &test;
+    printf("value is: %f\n", *(double*)(ptr));
+
+    ptr = &letter;
+    printf("value is: %c\n", *(char*)(ptr));
+
+    return 0;
+}
+
+</p>
+</details>
+
+
+## Function Pointer
+
+Function Pointer (con trỏ hàm) có thể trỏ vào một hàm và giá trị của con trỏ hàm là giá trị địa chỉ của hàm mà nó trỏ tới. 
+Function Pointer giúp truyền vào 1 function khác. 
+
+<details><summary>Code Demo Function Pointer</summary>
+<p>
+    
+```C
+
+#include <stdio.h>
+
+void sum(int a, int b){
+    printf("Sum of %d and %d is: %d\n",a,b, a+b);
+}
+
+void subtract(int a, int b){
+    printf("Subtract of %d by %d is: %d \n",a,b, a-b);
+}
+
+void multiple(int a, int b){
+    printf("Multiple of %d and %d is: %d \n",a,b, a*b );
+}
+
+void divide(int a, int b){
+    if (b == 0)
+    {
+        printf("Mau so phai khac 0\n");
+        return;
+    }
+    printf("%d divided by %d is: %f \n",a,b, (double)a / (double)b);
+}
+void calculator(void (*ptr)(int, int), int a, int b){
+    printf("Program calculate: \n");
+    ptr(a,b);
+}
+
+int main(){
+    // Method 1: 
+    calculator(sum,5,2);
+    calculator(subtract,5,2);
+    calculator(multiple,5,2);
+    calculator(divide,5,2);
+    // Method 2:
+    void (*ptr[])(int, int) = {sum, divide, multiple};
+    ptr[1](5,6);
+
+    return 0;
+}
+```
+
+</p>
+</details>
+
+## Pointer To Constrant
+
+- Là định nghĩa một con trỏ không thể thay đổi giá trị (Read-only) tại địa chỉ mà nó trỏ đến thông qua dereference nhưng giá trị tại địa chỉ đó có thể thay đổi(Có thể thay đổi biến trỏ tới).
+
+<details><summary>Code Demo Pointer To Constant</summary>
+<p>
+    
+```C
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    char a = 'a';
+    char b = 'b';
+
+    char const *ptrToConstant = &a;
+
+    printf("value: %c\n", *ptrToConstant);
+    printf("address: %d\n", ptrToConstant);
+
+    // *ptrToConstant = 'c'; //Lỗi
+
+    ptrToConstant = &b;
+
+    printf("value: %c\n", *ptrToConstant);
+    printf("address: %d\n", ptrToConstant);
+    return 0;
+}
+
+```
+
+</p>
+</details>
+
+## Constrant Pointer
+
+- Có thể thay đổi được giá trị mà nó trỏ tới nhưng không thể thay đổi được địa chỉ nó trỏ tới
+
+<details><summary>Code Demo Constant Pointer</summary>
+<p>
+    
+```C
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    char a = 'a';
+    char b = 'b';
+
+    char *const cons_ptr = &a;
+
+    printf("value: %c\n", *cons_ptr);
+    printf("address: %d\n", cons_ptr);
+
+    *cons_ptr = 'c';
+
+    printf("value: %c\n", *cons_ptr);
+    printf("address: %d\n", cons_ptr);
+
+    cons_ptr = &b; // Lỗi
+    return 0;
+}
+
+```
+
+</p>
+</details>
+
+## Pointer To Pointer
+
+- Giá trị con trỏ này là địa chỉ của con trỏ kia.
+
+## NULL Pointer
+
+- Null Pointer là một con trỏ không trỏ tới bất cứ địa chỉ nào. Vì khi một Pointer được khởi tạo luôn luôn phải gán giá trị cho nó hoặc là phải để NULL. 
+
+- Để tránh *Dereferencing* 
+
+
+# 5a. GOTO
+
+# 5b. SETJMP
+>>>>>>> 520f7b0f7249589dcc9227be66bf015dcc7bcd88
