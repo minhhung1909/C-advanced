@@ -4,7 +4,7 @@
 - [2a. STDARG](#2a-STDARG)
 - [2b. ASSERT](#2b-ASSERT)
 - [3. POINTER](#3-POINTER)
-- [4. Extern - Static - Volatile - Register](#4-Extern-Static-Volatile-Register)
+- [4. Extern - Static - Volatile - Register](#4-extern---static---volatile---register)
 - [5a. GOTO](#5a-GOTO)
 - [5b. SETJMP](#5b-SETJMP)
 
