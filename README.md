@@ -4,9 +4,9 @@
 - [2a. STDARG](#2a-STDARG)
 - [2b. ASSERT](#2b-ASSERT)
 - [3. POINTER](#3-POINTER)
+- [4. Extern - Static - Volatile - Register](#4-Extern-Static-Volatile-Register)
 - [5a. GOTO](#5a-GOTO)
 - [5b. SETJMP](#5b-SETJMP)
-
 
 # 1a. COMPILER
 
@@ -409,10 +409,40 @@ int main() {
 
 - Để tránh *Dereferencing* 
 
+# 4. Extern - Static - Volatile - Register
+
+## Extern
+Extern là dùng để khai báo một biến đã khai báo ở 1 file nào đó và được sử dụng trong 1 file mà biến Extern này được khai báo giúp dữ liệu tại biến này luôn được cập nhật tài 2 file.
+
+*ví dụ về Khai báo:*
+
+- Bên file A:
+
+int num = 10;
+
+- Bên file B(file cần liên kết biến num):
+
+extern int num;
+
+## Static
+### Local Static
+Static local là những biến hoạt động trong 1 hàm nhất định và không bị thu hồi địa chỉ khi hàm kết thúc. Nằm trong vùng nhớ BSS(uninitialized data segment)
+### Global Static
+Global static cũng tương tự local static nhưng chỉ khác là biến này hoạt động trong toàn bộ file.
+
+## Volatile
+Volotile trong c cho phép ngăn chặn việc tối ưu hoá biến làm cho giá trị biến đó không thay đổi khi có tác động bên ngoài. 
+
+## Register
+
+Register cho phép chuyển vùng nhớ từ ram sang thanh ghi (register). Việc này giúp việc tính toán trở nên nhanh hơn. Tuy vậy số lượng Register có hạn nên chỉ nên sài những biến thực sự cần thiết.
+
+Khai báo register bằng cách đặt tên trước kiểu dữ liệu *ví dụ*:
+
+register int a = 10;
 
 # 5a. GOTO
 
-- 
 
 # 5b. SETJMP
 
@@ -459,5 +489,3 @@ int main(){
 ```
 </p>
 </details>
-
-- Ứng dụng trong xử lý lỗi: 
