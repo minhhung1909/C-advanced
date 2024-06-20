@@ -1,11 +1,4 @@
 # C-C-Advanced-Study
-
-<<<<<<< HEAD
-COMPILER
-Compiler là gì?
-- Là phần mềm để dịch ngôn ngữ bậc cao về ngôn ngữ máy.
-ví dụ: gcc, g++
-=======
 - [1a. COMPILER](#1a-COMPILER)
 - [1b. MACRO](#1b-MACRO)
 - [2a. STDARG](#2a-STDARG)
@@ -20,48 +13,44 @@ ví dụ: gcc, g++
 Compiler Là phần mềm để dịch ngôn ngữ bậc cao về ngôn ngữ máy.
 
 Các Compiler: gcc, g++. Clang, GNU ...
->>>>>>> 520f7b0f7249589dcc9227be66bf015dcc7bcd88
 
 Các bước Compiler thực hiện: Preprocessor, Compilation, Assembler, Linker
 
 ## 1. Preprocessor (Tiền xử lý)
 
 Từ những file .c, .h, .cpp, .hpp chuyển sang file .i
-Lệnh tiền xử lý từ gcc: gcc -E <NameFile>.c -o <NameFile>.i
+Lệnh tiền xử lý từ gcc: gcc -E NameFile.c -o NameFile.i
 
 Preprocessor: Là thực hiện việc gộp vào cùng một file đối với là lệnh include, còn nếu là Macro thì sẽ thay thế đoạn định nghĩa sau đó và sẽ xoá hết tất cả comment.
 
 ## 2. Compilation
 
 Tạo file Assembly code ( .s)từ file .i
-Lệnh tạo ra Assembly từ gcc: gcc -S <NameFile>.i -o <NameFile>.s
+Lệnh tạo ra Assembly từ gcc: gcc -S NameFile.i -o NameFile.s
 
 Compilation: tạo ra file Assembly
 
 ## 3. Assembler
 
 Tạo object file .o từ file .s
-Lệnh tạo ra Object file từ gcc: gcc -C <NameFile>.s -o <NameFile>.o
+Lệnh tạo ra Object file từ gcc: gcc -C NameFile.s -o NameFile.o
 
 ## 4. Linker
 
 Liên kết các Object file lại với nhau.
 tạo ra được file .exe
-Lệnh liên kết các file từ gcc: gcc <NameFile>.o <NameFile>.o -o <NameFileLinker>
+Lệnh liên kết các file từ gcc: gcc NameFile.o NameFile.o -o NameFileLinker
 
 # 1b. MACRO
 
-<<<<<<< HEAD
 MACRO
 =======
->>>>>>> 520f7b0f7249589dcc9227be66bf015dcc7bcd88
 Macro là nhóm lệnh dùng để thay thế định nghĩa những đoạn lệnh sau đó
 Macro gồm những nhóm lệnh sau: 
 - #include (include thư viện hoặc các file khác)
 - #define, #undef (định nghĩa/gỡ định nghĩa những giá trị sau đó)
 - #if, #elif, #else, #ifdef, #ifndef
 
-<<<<<<< HEAD
 - Sự khác nhau giửa Macro và Function
     + Macro: Thay thế đoạn định nghĩa vào chương trình nếu gọi nhiều lần thì thay thế nhiều lần => Kích thước lớn hơn; Bù lại tốc độ xử lý nhanh hơn.
     + Function: Viết chương trình 1 lần sau này chỉ cần gọi lại => Kích thước chương trình lớn hơn; Tốc độ xử lý chậm hơn vì phải qua những cơ chế như: lưu vào main Stack poiter hay đếm (Program counter)  
@@ -423,5 +412,52 @@ int main() {
 
 # 5a. GOTO
 
+- 
+
 # 5b. SETJMP
->>>>>>> 520f7b0f7249589dcc9227be66bf015dcc7bcd88
+
+- setjmp.h: Đây là một thư viện dùng để xử lý ngoại lệ(gần tương tự như goto). Thư viện này cung cấp 2 hàm là:
+
+    + setjmp: có 1 tham số truyền vào là biến có kiểu dữ liệu __jmp_buf__ 
+    Hàm có giá trị trả về int.
+
+    + longjmp: Có 2 tham số truyền vào: Đầu tiên là Biến truyền vào của setjmp, thứ hai là tham số được set tuỳ ý để con trỏ dịch về setjmp và lúc này setjmp sẽ trả về tham số thứ 2 này
+
+<details><summary>Code Demo Example flow</summary>
+<p>
+    
+```C
+
+#include "stdio.h"
+#include "setjmp.h"
+#define END 1
+
+jmp_buf value_Control;
+
+int count = 0;
+int main(){
+
+    int number = setjmp(value_Control);
+
+    if(number == 0){
+        printf("setjmp return is: %d \n", number);
+        count++;
+    }
+    else{
+        printf("setjmp return is: %d \n", number);
+        if (count == END) return 0;
+    }
+
+    longjmp(value_Control, 2);
+
+    return 0;
+}
+
+// Giá trị đầu tiên sau khi chạy chương trình là giá trị trả về của setjmp đầu tiên sẽ là 0 sau khi chạy xong if thì 
+
+//Xuống longjmp với tham số được set là 2 thì sẽ nhảy ngược lại hàm setjmp có biến value_Control và trả về con số mà biến longjmp đã set là 2. 
+```
+</p>
+</details>
+
+- Ứng dụng trong xử lý lỗi: 
