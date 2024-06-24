@@ -4,9 +4,11 @@
 - [2a. STDARG](#2a-STDARG)
 - [2b. ASSERT](#2b-ASSERT)
 - [3. POINTER](#3-POINTER)
-- [4. Extern - Static - Volatile - Register](#4-extern---static---volatile---register)
+- [4. EXTERN - STATIC - VOLATILE - REGISTER](#4-EXTERN---STATIC---VOLATILE---REGISTER)
 - [5a. GOTO](#5a-GOTO)
 - [5b. SETJMP](#5b-SETJMP)
+- [6. BIT MAINPULATION](#6-BIT-MAINPULATION)
+- [7. STRUCT - UNION](#7-STRUCT---UNION)
 
 # 1a. COMPILER
 
@@ -251,6 +253,7 @@ Void pointer được sử dụng để trỏ vào biến mà không biết trư
 <details><summary> Xem Code Demo </summary>
 <p>
 
+```C
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -270,6 +273,7 @@ int main() {
 
     return 0;
 }
+```
 
 </p>
 </details>
@@ -409,7 +413,7 @@ int main() {
 
 - Để tránh *Dereferencing* 
 
-# 4. Extern - Static - Volatile - Register
+# 4. EXTERN - STATIC - VOLATILE - REGISTER
 
 ## Extern
 Extern là dùng để khai báo một biến đã khai báo ở 1 file nào đó và được sử dụng trong 1 file mà biến Extern này được khai báo giúp dữ liệu tại biến này luôn được cập nhật tài 2 file.
@@ -443,17 +447,45 @@ register int a = 10;
 
 # 5a. GOTO
 
+Goto là một trong những câu lệnh giúp kiểm soát flow hoạt động của chương trình. Nhưng các này thường ít được khuyên dùng do vấn đề bảo trình và đọc gặp khó khăn. Đối với goto chỉ hoạt động được trong cục bộ.
+
+<details><summary>Code Demo Example flow</summary>
+<p>
+    
+```C
+
+#include <stdio.h>
+int main() {
+    int i = 0;
+    // Đặt nhãn    
+    start:
+        if (i >= 5) {
+            goto end;  // Chuyển control đến nhãn "end"
+        }
+        printf("%d ", i);
+        i++;
+        goto start;  // Chuyển control đến nhãn "start"
+
+    // Nhãn "end"
+    end:
+        printf("\n");
+        return 0;
+}
+
+```
+</p>
+</details>
 
 # 5b. SETJMP
 
-- setjmp.h: Đây là một thư viện dùng để xử lý ngoại lệ(gần tương tự như goto). Thư viện này cung cấp 2 hàm là:
+- setjmp.h: Đây là một thư viện dùng để xử lý ngoại lệ(gần tương tự như goto) Nhưng thư viện này mạnh hơn Goto ở chỗ có thể hoạt động toàn cục. Thư viện này cung cấp 2 hàm là:
 
     + setjmp: có 1 tham số truyền vào là biến có kiểu dữ liệu __jmp_buf__ 
     Hàm có giá trị trả về int.
 
     + longjmp: Có 2 tham số truyền vào: Đầu tiên là Biến truyền vào của setjmp, thứ hai là tham số được set tuỳ ý để con trỏ dịch về setjmp và lúc này setjmp sẽ trả về tham số thứ 2 này
 
-<details><summary>Code Demo Example flow</summary>
+<details><summary>Code Demo Goto</summary>
 <p>
     
 ```C
@@ -489,3 +521,89 @@ int main(){
 ```
 </p>
 </details>
+
+# 6. BIT MASK
+
+- Bit mask là kỹ thuật sử lý bit dùng để lưu trữ hoặc thao tác nó với các cờ hoặc trạng thái.
+
+- Ứng dụng thường được dùng trong việc tối ưu hoá bộ nhớ, giúp chương trình chạy nhanh hơn, quản lý các trạng thái, quyền truy cập của các đối tượng.
+
+## NOT bitwise
+
+- Dùng để đảo trạng thái bit hiện tại 
+
+```C
+int a = 0b01    // = 1
+int b = ~a  // result = -2
+```
+
+## AND bitwise
+
+```C
+Bảng Sự Thật
+X1  X2  Y
+0   0   0
+0   1   0
+1   0   0
+1   1   1
+```
+
+## OR bitwise
+
+```C
+Bảng Sự Thật
+X1  X2  Y
+0   0   0
+0   1   1
+1   0   1
+1   1   1
+```
+
+## XOR bitwise
+
+Nếu tổng số bit 1 trên cột là lẻ thì nó là 1
+
+```C
+Bảng Sự Thật
+Y = X1 ^ X2
+X1  X2  Y
+0   0   0
+0   1   1
+1   0   1
+1   1   0
+```
+
+## Shift bitwise
+Shift bit có 2 loại là:
+
+- Shift Right: là dịch bit sang bên phải và thêm số 0 vào bên trái số bit đã dịch
+
+```C
+result = 0b0101 >> 1
+result // 0b0010 
+```
+
+- Shift Left: là dịch bit sang bên trái và thêm số 0 vào bên phải số bit đã dịch
+
+```C
+result = 0b0101 << 1
+result // 0b1010
+```
+
+
+# 7. STRUCT - UNION
+
+## Struct
+
+Struct là một cấu trúc dữ liệu có thể tự định nghĩa thành một kiểu dữ liệu mới có thể gom các biến có kiểu dữ liệu khác nhau thành một struct. Struct cho phép tạo cấu trúc dữ liệu lớn hơn và có tổ chức hơn.
+
+```C
+struct Student {
+    int studentID;
+    char name[50];
+    double GPA;
+};
+```
+
+## Union
+
